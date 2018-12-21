@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +20,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
 import java.lang.ref.WeakReference;
+import java.util.Map;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zxing.QRCodeEncoder;
@@ -29,7 +35,7 @@ public class AnimatorOrCodeActivity extends AppCompatActivity implements View.On
 
     private ImageView animatorIcon;
     private ImageView iconqrcode;
-    private Button btn_qrcode_sweep;
+    private Button btn_qrcode_sweep, btn_QQLogin;
     private Button btn_qrcode;
     private EditText textView;
 
@@ -47,10 +53,12 @@ public class AnimatorOrCodeActivity extends AppCompatActivity implements View.On
         btn_qrcode_sweep = findViewById(R.id.btn_qrcode_sweep);
         btn_qrcode = findViewById(R.id.btn_qrcode);
         textView = findViewById(R.id.text_qrcode);
+        btn_QQLogin = findViewById(R.id.btn_QQLogin);
 
         animatorIcon.setOnClickListener(this);
         btn_qrcode.setOnClickListener(this);
         btn_qrcode_sweep.setOnClickListener(this);
+        btn_QQLogin.setOnClickListener(this);
     }
 
     @Override
@@ -64,21 +72,44 @@ public class AnimatorOrCodeActivity extends AppCompatActivity implements View.On
             case R.id.btn_qrcode_sweep:
                 checkedPermission();
                 break;
+            case R.id.btn_QQLogin:
+                UMShareAPI umShareAPI = UMShareAPI.get(AnimatorOrCodeActivity.this);
+                umShareAPI.getPlatformInfo(AnimatorOrCodeActivity.this, SHARE_MEDIA.QQ, new UMAuthListener() {
+                    @Override
+                    public void onStart(SHARE_MEDIA share_media) {
+
+                    }
+
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                        String name = map.get("screen_name");
+                        String img = map.get("profile_image_url");
+                        Log.i("sl", "name is "+name);
+                        Log.i("sl",img);
+                        Intent intent = new Intent(AnimatorOrCodeActivity.this, SuccessActivity.class);
+                        intent.putExtra("name", name);
+                        intent.putExtra("img", img);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onCancel(SHARE_MEDIA share_media, int i) {
+
+                    }
+                });
+                break;
             default:
                 break;
         }
     }
 
     private void checkedPermission() {
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //判断有没有权限，没有就授权，否则进行跳转
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 100);
-            } else {
-               */ //进行跳转
-                startActivity(new Intent(AnimatorOrCodeActivity.this, SweepActivity.class));
-           // }
-        //}
+        startActivity(new Intent(AnimatorOrCodeActivity.this, SweepActivity.class));
     }
 
     private void creatQRCode() {

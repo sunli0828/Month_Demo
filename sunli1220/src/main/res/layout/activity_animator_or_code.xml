@@ -39,16 +39,31 @@
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_margin="15dp"
+        android:layout_margin="5dp"
         android:id="@+id/icon_qrcode"
         android:layout_gravity="center_horizontal"/>
-    <Button
-        android:layout_width="100dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:text="扫一扫"
-        android:background="@android:color/holo_orange_light"
-        android:textColor="#fff"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/btn_qrcode_sweep"/>
+        android:orientation="horizontal"
+        android:layout_margin="30dp">
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:text="扫一扫"
+            android:background="@android:color/holo_orange_light"
+            android:textColor="#fff"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/btn_qrcode_sweep"/>
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:text="第三方登录"
+            android:background="@android:color/holo_orange_light"
+            android:textColor="#fff"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/btn_QQLogin"/>
+    </LinearLayout>
 </LinearLayout>
